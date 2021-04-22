@@ -28,8 +28,8 @@ import (
 	"k8s.io/client-go/kubernetes"
 	restclient "k8s.io/client-go/rest"
 
-	"github.com/nfrush/sotaria-apiserver/pkg/apis/sotaria"
-	"github.com/nfrush/sotaria-apiserver/pkg/apis/sotaria/install"
+	sotaria "github.com/nfrush/sotaria-apiserver/pkg/apis/sotaria"
+	install "github.com/nfrush/sotaria-apiserver/pkg/apis/sotaria/install"
 	sotariaregistry "github.com/nfrush/sotaria-apiserver/pkg/registry"
 	projectstorage "github.com/nfrush/sotaria-apiserver/pkg/registry/sotaria/project"
 )

@@ -21,4 +21,4 @@ limitations under the License.
 // +groupName=security.sotaria.us
 
 // Package v1alpha1 is the v1alpha1 version of the API.
-package v1alpha1 // import "k8s.io/sample-apiserver/pkg/apis/sotaria/v1alpha1"
+package v1alpha1 // import "github.com/nfrush/sotaria-apiserver/pkg/apis/sotaria/v1alpha1"

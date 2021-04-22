@@ -22,14 +22,14 @@ import (
 	"context"
 	time "time"
 
+	sotariav1alpha1 "github.com/nfrush/sotaria-apiserver/pkg/apis/sotaria/v1alpha1"
+	versioned "github.com/nfrush/sotaria-apiserver/pkg/generated/clientset/versioned"
+	internalinterfaces "github.com/nfrush/sotaria-apiserver/pkg/generated/informers/externalversions/internalinterfaces"
+	v1alpha1 "github.com/nfrush/sotaria-apiserver/pkg/generated/listers/sotaria/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
 	cache "k8s.io/client-go/tools/cache"
-	sotariav1alpha1 "k8s.io/sample-apiserver/pkg/apis/sotaria/v1alpha1"
-	versioned "k8s.io/sample-apiserver/pkg/generated/clientset/versioned"
-	internalinterfaces "k8s.io/sample-apiserver/pkg/generated/informers/externalversions/internalinterfaces"
-	v1alpha1 "k8s.io/sample-apiserver/pkg/generated/listers/sotaria/v1alpha1"
 )
 
 // ProjectInformer provides access to a shared informer and lister for

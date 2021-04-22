@@ -105,8 +105,6 @@ func (o WardleServerOptions) Validate(args []string) error {
 func (o *WardleServerOptions) Complete() error {
 
 	// add admission plugins to the RecommendedPluginOrder
-	o.RecommendedOptions.Admission.RecommendedPluginOrder = append(o.RecommendedOptions.Admission.RecommendedPluginOrder, "BanFlunder")
-
 	return nil
 }
 

@@ -18,4 +18,4 @@ limitations under the License.
 // +groupName=security.sotaria.us
 
 // Package wardle is the internal version of the API.
-package sotaria // import "k8s.io/sample-apiserver/pkg/apis/wardle"
+package sotaria // import "github.com/nfrush/sotaria-apiserver/pkg/apis/wardle"

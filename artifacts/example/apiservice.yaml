@@ -1,10 +1,10 @@
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
-  name: v1alpha1.nfrush.github.com
+  name: v1alpha1.security.sotaria.io
 spec:
   insecureSkipTLSVerify: true
-  group: nfrush.github.com
+  group: security.sotaria.io
   groupPriorityMinimum: 1000
   versionPriority: 15
   service:

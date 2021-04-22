@@ -19,8 +19,8 @@ limitations under the License.
 package sotaria
 
 import (
+	internalinterfaces "github.com/nfrush/sotaria-apiserver/pkg/generated/informers/externalversions/internalinterfaces"
 	v1alpha1 "github.com/nfrush/sotaria-apiserver/pkg/generated/informers/externalversions/sotaria/v1alpha1"
-	internalinterfaces "github.com/nfrush/sotaria-apiserverr/pkg/generated/informers/externalversions/internalinterfaces"
 )
 
 // Interface provides access to each of this group's versions.

@@ -28,13 +28,13 @@ CODEGEN_PKG=${CODEGEN_PKG:-$(cd "${SCRIPT_ROOT}"; ls -d -1 ./vendor/k8s.io/code-
 bash "${CODEGEN_PKG}/generate-groups.sh" all \
   github.com/nfrush/sotaria-apiserver/pkg/generated github.com/nfrush/sotaria-apiserver/pkg/apis \
   "sotaria:v1alpha1" \
-  --output-base "$(dirname "${BASH_SOURCE[0]}")/../../.." \
+  --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../.." \
   --go-header-file "${SCRIPT_ROOT}"/hack/boilerplate.go.txt
 
 bash "${CODEGEN_PKG}/generate-internal-groups.sh" "deepcopy,defaulter,conversion,openapi" \
   github.com/nfrush/sotaria-apiserver/pkg/generated github.com/nfrush/sotaria-apiserver/pkg/apis github.com/nfrush/sotaria-apiserver/pkg/apis \
   "sotaria:v1alpha1" \
-  --output-base "$(dirname "${BASH_SOURCE[0]}")/../../.." \
+  --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../.." \
   --go-header-file "${SCRIPT_ROOT}/hack/boilerplate.go.txt"
 
 # To use your own boilerplate text append:
