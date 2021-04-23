@@ -154,6 +154,7 @@ func Convert_sotaria_ProjectSpec_To_v1alpha1_ProjectSpec(in *sotaria.ProjectSpec
 }
 
 func autoConvert_v1alpha1_ProjectStatus_To_sotaria_ProjectStatus(in *ProjectStatus, out *sotaria.ProjectStatus, s conversion.Scope) error {
+	out.Phase = v1.NamespacePhase(in.Phase)
 	return nil
 }
 
@@ -163,6 +164,7 @@ func Convert_v1alpha1_ProjectStatus_To_sotaria_ProjectStatus(in *ProjectStatus, 
 }
 
 func autoConvert_sotaria_ProjectStatus_To_v1alpha1_ProjectStatus(in *sotaria.ProjectStatus, out *ProjectStatus, s conversion.Scope) error {
+	out.Phase = v1.NamespacePhase(in.Phase)
 	return nil
 }
 

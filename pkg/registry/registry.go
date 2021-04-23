@@ -60,16 +60,28 @@ func (s *REST) List(ctx context.Context, options *metainternalversion.ListOption
 		return nil, kerrors.NewForbidden(sotariaapi.Resource("project"), "", fmt.Errorf("unable to list projects without a user on the context"))
 	}
 	fmt.Printf("User: %v\n", user)
-	namespaces, err := s.NamespaceLister.List(labels.Everything())
+	projectSelector, err := labels.Parse("security.sotaria.io/type=project")
 	if err != nil {
 		return nil, err
 	}
-	var nameList []string
-	for _, namespace := range namespaces {
-		nameList = append(nameList, namespace.ObjectMeta.Name)
+	namespaces, err := s.NamespaceLister.List(projectSelector)
+	if err != nil {
+		return nil, err
 	}
-	fmt.Printf("Got %v\n", nameList)
-	return s.Store.List(ctx, options)
+	projects := &sotariaapi.ProjectList{}
+	for _, namespace := range namespaces {
+		project := sotariaapi.Project{
+			ObjectMeta: namespace.ObjectMeta,
+			Spec: sotariaapi.ProjectSpec{
+				Finalizers: namespace.Spec.Finalizers,
+			},
+			Status: sotariaapi.ProjectStatus{
+				Phase: namespace.Status.Phase,
+			},
+		}
+		projects.Items = append(projects.Items, project)
+	}
+	return projects, nil
 }
 
 func (s *REST) Watch(ctx context.Context, options *metainternalversion.ListOptions) (watch.Interface, error) {

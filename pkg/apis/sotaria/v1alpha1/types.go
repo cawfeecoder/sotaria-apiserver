@@ -32,10 +32,11 @@ type ProjectList struct {
 }
 
 type ProjectSpec struct {
-	Finalizers []v1.FinalizerName
+	Finalizers []v1.FinalizerName `json:"finalizers,omitempty" protobuf:"bytes,1,rep,name=finalizers,casttype=k8s.io/kubernetes/pkg/api/v1.FinalizerName"`
 }
 
 type ProjectStatus struct {
+	Phase v1.NamespacePhase `json:"phase,omitempty" protobuf:"bytes,1,opt,name=phase,casttype=k8s.io/kubernetes/pkg/api/v1.NamespacePhase"`
 }
 
 // +genclient

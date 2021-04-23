@@ -190,7 +190,7 @@ func schema_pkg_apis_sotaria_v1alpha1_ProjectSpec(ref common.ReferenceCallback) 
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"Finalizers": {
+					"finalizers": {
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"array"},
 							Items: &spec.SchemaOrArray{
@@ -205,7 +205,6 @@ func schema_pkg_apis_sotaria_v1alpha1_ProjectSpec(ref common.ReferenceCallback) 
 						},
 					},
 				},
-				Required: []string{"Finalizers"},
 			},
 		},
 	}
@@ -216,6 +215,14 @@ func schema_pkg_apis_sotaria_v1alpha1_ProjectStatus(ref common.ReferenceCallback
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
 			},
 		},
 	}

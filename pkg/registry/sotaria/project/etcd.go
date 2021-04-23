@@ -19,16 +19,22 @@ package project
 import (
 	"github.com/nfrush/sotaria-apiserver/pkg/apis/sotaria"
 	"github.com/nfrush/sotaria-apiserver/pkg/registry"
+	"github.com/nfrush/sotaria-apiserver/pkg/registry/tableconvertor"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apiserver/pkg/registry/generic"
 	genericregistry "k8s.io/apiserver/pkg/registry/generic/registry"
-	"k8s.io/apiserver/pkg/registry/rest"
 	corev1listers "k8s.io/client-go/listers/core/v1"
 )
 
 // NewREST returns a RESTStorage object that will work against API services.
 func NewREST(scheme *runtime.Scheme, optsGetter generic.RESTOptionsGetter, nsLister corev1listers.NamespaceLister) (*registry.REST, error) {
 	strategy := NewStrategy(scheme)
+
+	table_convert, err := tableconvertor.New(sotaria.AdditionalPrinterColumns)
+
+	if err != nil {
+		return nil, err
+	}
 
 	store := &genericregistry.Store{
 		NewFunc:                  func() runtime.Object { return &sotaria.Project{} },
@@ -41,7 +47,7 @@ func NewREST(scheme *runtime.Scheme, optsGetter generic.RESTOptionsGetter, nsLis
 		DeleteStrategy: strategy,
 
 		// TODO: define table converter that exposes more than name/creation timestamp
-		TableConvertor: rest.NewDefaultTableConvertor(sotaria.Resource("projects")),
+		TableConvertor: table_convert,
 	}
 	options := &generic.StoreOptions{RESTOptions: optsGetter, AttrFunc: GetAttrs}
 	if err := store.CompleteWithOptions(options); err != nil {

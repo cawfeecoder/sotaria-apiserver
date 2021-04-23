@@ -18,7 +18,29 @@ package sotaria
 
 import (
 	v1 "k8s.io/api/core/v1"
+	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+var swaggerMetadataDescriptionsObj = metav1.ObjectMeta{}.SwaggerDoc()
+
+var swaggerMetadataDescriptionsNS = v1.NamespaceStatus{}.SwaggerDoc()
+
+var (
+	AdditionalPrinterColumns = []apiextensions.CustomResourceColumnDefinition{
+		{
+			Name:        "Status",
+			Type:        "string",
+			Description: swaggerMetadataDescriptionsNS["phase"],
+			JSONPath:    ".status.phase",
+		},
+		{
+			Name:        "Age",
+			Type:        "string",
+			Description: swaggerMetadataDescriptionsObj["creationTimestamp"],
+			JSONPath:    ".objectMeta.creationTimestamp",
+		},
+	}
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -38,6 +60,7 @@ type ProjectSpec struct {
 
 // FlunderStatus is the status of a Flunder.
 type ProjectStatus struct {
+	Phase v1.NamespacePhase
 }
 
 // +genclient
