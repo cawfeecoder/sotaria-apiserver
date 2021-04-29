@@ -23,11 +23,13 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apiserver/pkg/registry/generic"
 	genericregistry "k8s.io/apiserver/pkg/registry/generic/registry"
+	"k8s.io/client-go/kubernetes"
 	corev1listers "k8s.io/client-go/listers/core/v1"
+	rbacv1listers "k8s.io/client-go/listers/rbac/v1"
 )
 
 // NewREST returns a RESTStorage object that will work against API services.
-func NewREST(scheme *runtime.Scheme, optsGetter generic.RESTOptionsGetter, nsLister corev1listers.NamespaceLister) (*registry.REST, error) {
+func NewREST(scheme *runtime.Scheme, optsGetter generic.RESTOptionsGetter, nsLister corev1listers.NamespaceLister, crbLister rbacv1listers.ClusterRoleBindingLister, kubeClient *kubernetes.Clientset) (*registry.REST, error) {
 	strategy := NewStrategy(scheme)
 
 	table_convert, err := tableconvertor.New(sotaria.AdditionalPrinterColumns)
@@ -40,7 +42,7 @@ func NewREST(scheme *runtime.Scheme, optsGetter generic.RESTOptionsGetter, nsLis
 		NewFunc:                  func() runtime.Object { return &sotaria.Project{} },
 		NewListFunc:              func() runtime.Object { return &sotaria.ProjectList{} },
 		PredicateFunc:            MatchProject,
-		DefaultQualifiedResource: sotaria.Resource("flunders"),
+		DefaultQualifiedResource: sotaria.Resource("projects"),
 
 		CreateStrategy: strategy,
 		UpdateStrategy: strategy,
@@ -53,5 +55,5 @@ func NewREST(scheme *runtime.Scheme, optsGetter generic.RESTOptionsGetter, nsLis
 	if err := store.CompleteWithOptions(options); err != nil {
 		return nil, err
 	}
-	return &registry.REST{nsLister, store}, nil
+	return &registry.REST{kubeClient, nsLister, crbLister, store}, nil
 }

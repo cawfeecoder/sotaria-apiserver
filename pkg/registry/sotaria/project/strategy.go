@@ -32,8 +32,8 @@ import (
 )
 
 // NewStrategy creates and returns a flunderStrategy instance
-func NewStrategy(typer runtime.ObjectTyper) flunderStrategy {
-	return flunderStrategy{typer, names.SimpleNameGenerator}
+func NewStrategy(typer runtime.ObjectTyper) projectStrategy {
+	return projectStrategy{typer, names.SimpleNameGenerator}
 }
 
 // GetAttrs returns labels.Set, fields.Set, and error in case the given runtime.Object is not a Flunder
@@ -60,36 +60,36 @@ func SelectableFields(obj *sotaria.Project) fields.Set {
 	return generic.ObjectMetaFieldsSet(&obj.ObjectMeta, true)
 }
 
-type flunderStrategy struct {
+type projectStrategy struct {
 	runtime.ObjectTyper
 	names.NameGenerator
 }
 
-func (flunderStrategy) NamespaceScoped() bool {
-	return true
+func (projectStrategy) NamespaceScoped() bool {
+	return false
 }
 
-func (flunderStrategy) PrepareForCreate(ctx context.Context, obj runtime.Object) {
+func (projectStrategy) PrepareForCreate(ctx context.Context, obj runtime.Object) {
 }
 
-func (flunderStrategy) PrepareForUpdate(ctx context.Context, obj, old runtime.Object) {
+func (projectStrategy) PrepareForUpdate(ctx context.Context, obj, old runtime.Object) {
 }
 
-func (flunderStrategy) Validate(ctx context.Context, obj runtime.Object) field.ErrorList {
+func (projectStrategy) Validate(ctx context.Context, obj runtime.Object) field.ErrorList {
 	return field.ErrorList{}
 }
 
-func (flunderStrategy) AllowCreateOnUpdate() bool {
+func (projectStrategy) AllowCreateOnUpdate() bool {
 	return false
 }
 
-func (flunderStrategy) AllowUnconditionalUpdate() bool {
+func (projectStrategy) AllowUnconditionalUpdate() bool {
 	return false
 }
 
-func (flunderStrategy) Canonicalize(obj runtime.Object) {
+func (projectStrategy) Canonicalize(obj runtime.Object) {
 }
 
-func (flunderStrategy) ValidateUpdate(ctx context.Context, obj, old runtime.Object) field.ErrorList {
+func (projectStrategy) ValidateUpdate(ctx context.Context, obj, old runtime.Object) field.ErrorList {
 	return field.ErrorList{}
 }

@@ -21,6 +21,7 @@ import (
 	"fmt"
 
 	sotariaapi "github.com/nfrush/sotaria-apiserver/pkg/apis/sotaria"
+	"github.com/nfrush/sotaria-apiserver/pkg/util"
 	kerrors "k8s.io/apimachinery/pkg/api/errors"
 	metainternalversion "k8s.io/apimachinery/pkg/apis/meta/internalversion"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -30,12 +31,16 @@ import (
 	"k8s.io/apiserver/pkg/endpoints/request"
 	genericregistry "k8s.io/apiserver/pkg/registry/generic/registry"
 	"k8s.io/apiserver/pkg/registry/rest"
+	"k8s.io/client-go/kubernetes"
 	corev1listers "k8s.io/client-go/listers/core/v1"
+	rbacv1listers "k8s.io/client-go/listers/rbac/v1"
 )
 
 // REST implements a RESTStorage for API services against etcd
 type REST struct {
+	*kubernetes.Clientset
 	corev1listers.NamespaceLister
+	rbacv1listers.ClusterRoleBindingLister
 	*genericregistry.Store
 }
 
@@ -64,22 +69,38 @@ func (s *REST) List(ctx context.Context, options *metainternalversion.ListOption
 	if err != nil {
 		return nil, err
 	}
+	clusteRoleBinding, err := s.ClusterRoleBindingLister.List(projectSelector)
+	if err != nil {
+		return nil, err
+	}
+	userClusterRoles := []string{}
+	for _, v := range clusteRoleBinding {
+		for _, z := range v.Subjects {
+			fmt.Printf("Subjects: %z", z)
+			if (z.Kind == "User" && z.Name == user.GetName()) || (z.Kind == "Group" && util.StrArrayContains(user.GetGroups(), z.Name)) || (z.Kind == "ServiceAccount" && z.Name == user.GetName()) {
+				userClusterRoles = append(userClusterRoles, v.RoleRef.Name)
+			}
+		}
+	}
 	namespaces, err := s.NamespaceLister.List(projectSelector)
 	if err != nil {
 		return nil, err
 	}
 	projects := &sotariaapi.ProjectList{}
+	isAdmin := util.StrArrayContains(user.GetGroups(), "system:masters")
 	for _, namespace := range namespaces {
-		project := sotariaapi.Project{
-			ObjectMeta: namespace.ObjectMeta,
-			Spec: sotariaapi.ProjectSpec{
-				Finalizers: namespace.Spec.Finalizers,
-			},
-			Status: sotariaapi.ProjectStatus{
-				Phase: namespace.Status.Phase,
-			},
+		if util.StrArrayContains(user.GetGroups(), namespace.Labels["security.sotaria.io/role"]) || util.StrArrayContains(userClusterRoles, namespace.Labels["security.sotaria.io/role"]) || isAdmin {
+			project := sotariaapi.Project{
+				ObjectMeta: namespace.ObjectMeta,
+				Spec: sotariaapi.ProjectSpec{
+					Finalizers: namespace.Spec.Finalizers,
+				},
+				Status: sotariaapi.ProjectStatus{
+					Phase: namespace.Status.Phase,
+				},
+			}
+			projects.Items = append(projects.Items, project)
 		}
-		projects.Items = append(projects.Items, project)
 	}
 	return projects, nil
 }

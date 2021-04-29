@@ -125,7 +125,7 @@ func (c completedConfig) New() (*SotariaServer, error) {
 	apiGroupInfo := genericapiserver.NewDefaultAPIGroupInfo(sotaria.GroupName, Scheme, metav1.ParameterCodec, Codecs)
 
 	v1alpha1storage := map[string]rest.Storage{}
-	v1alpha1storage["projects"] = sotariaregistry.RESTInPeace(projectstorage.NewREST(Scheme, c.GenericConfig.RESTOptionsGetter, informerFactory.Core().V1().Namespaces().Lister()))
+	v1alpha1storage["projects"] = sotariaregistry.RESTInPeace(projectstorage.NewREST(Scheme, c.GenericConfig.RESTOptionsGetter, informerFactory.Core().V1().Namespaces().Lister(), informerFactory.Rbac().V1().ClusterRoleBindings().Lister(), kubeClient))
 	apiGroupInfo.VersionedResourcesStorageMap["v1alpha1"] = v1alpha1storage
 
 	if err := s.GenericAPIServer.InstallAPIGroup(&apiGroupInfo); err != nil {

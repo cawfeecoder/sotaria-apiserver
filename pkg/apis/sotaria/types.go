@@ -37,6 +37,7 @@ var (
 		{
 			Name:        "Age",
 			Type:        "string",
+			Format:      "date",
 			Description: swaggerMetadataDescriptionsObj["creationTimestamp"],
 			JSONPath:    ".objectMeta.creationTimestamp",
 		},
